@@ -3,7 +3,7 @@ import cv2
 import cvzone
 import math
 
-cap = cv2.VideoCapture("../videos/1.mp4")
+cap = cv2.VideoCapture("../videos/2.mp4")
 
 model = YOLO('../Yolo-Weights/yolov8l.pt')
 
@@ -14,10 +14,12 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "potted plant",
               "bed", "dining table", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster",
               "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
+mask = cv2.imread("mask.png")
 
 while True:
     success, img = cap.read()
-    results = model(img, stream=True)
+    imgRegion = cv2.bitwise_and(img, mask)
+    results = model(imgRegion, stream=True)
 
     for r in results:
         boxes = r.boxes
