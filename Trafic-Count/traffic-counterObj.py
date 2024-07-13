@@ -5,7 +5,7 @@ import math
 
 cap = cv2.VideoCapture("../videos/2.mp4")
 
-model = YOLO('../Yolo-Weights/yolov8l.pt')
+model = YOLO('../Yolo-Weights/yolov8n.pt')
 
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat", "traffic light", "fire hydrant",
               "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe",
@@ -20,6 +20,9 @@ while True:
     success, img = cap.read()
     imgRegion = cv2.bitwise_and(img, mask)
     results = model(imgRegion, stream=True)
+
+    width = 800
+    height = 500
 
     for r in results:
         boxes = r.boxes
@@ -53,5 +56,15 @@ while True:
                 cvzone.putTextRect(img, f'{currentClass} {conf}', (max(0,x1), max(35, y1)), scale=0.6, thickness=1, offset=3)
                 cvzone.cornerRect(img, (x1, y1, w, h), l=9)
 
-    cv2.imshow("Tracking", img)
-    cv2.waitKey(1)
+    # Text on the screen
+    cv2.putText(img, f"Traffic Counter: {currentClass}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+
+    # To resize the image
+    resize_img = cv2.resize(img, (width, height))
+
+    # FPS
+    FPS = 1 / 30
+    FPS_MS = int(FPS * 1000)
+
+    cv2.imshow("Tracking", resize_img)
+    cv2.waitKey(FPS_MS)
