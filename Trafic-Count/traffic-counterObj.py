@@ -23,6 +23,10 @@ limitsIn = [1050,750,1750,750]
 totCountIn = []
 totCountOut = []
 
+# Screen Settings
+width = 1600
+height = 800
+
 while True:
     success, img = cap.read()
     imgRegion = cv2.bitwise_and(img, mask)
@@ -91,5 +95,8 @@ while True:
         cvzone.putTextRect(img, f' Keluar: {len(totCountOut)}', (50, 50))
         cvzone.putTextRect(img, f' Masuk: {len(totCountIn)}', (1600,50))
 
-    cv2.imshow("Tracking", img)
+    #Resize the window
+    re_img = cv2.resize(img, (width, height))
+
+    cv2.imshow("Tracking", re_img)
     cv2.waitKey(1)
